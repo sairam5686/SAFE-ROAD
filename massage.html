@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        exports.handler = async function(context, event, callback) {
+  
+};
+const contacts = [
+  '+919840078733',
+  '+919361770409'
+]
+const message = `This is a message from Sairam's emergency notification system,:\n\n${event.Body.toLowerCase() == 'sos' ? 'Im experiencing an emergency.' : event.Body}`
+const client = context.getTwilioClient();
+const failed = [];
+for (let contact of contacts) {
+  try {
+    await client.messages.create({
+      to: contact,
+      from: event.To,
+      body: message
+    })
+  } catch(err) {
+    console.log(err)
+    failed.push(contact)
+  }
+}
+let response = failed.length > 0 ? `Message(s) to ${failed.toString()} did not send.` : 'All messages sent.'
+return callback(null, response)
+
+
+
+
+    </script>
+</body>
+</html>
